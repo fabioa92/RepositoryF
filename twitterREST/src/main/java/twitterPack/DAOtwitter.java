@@ -193,5 +193,69 @@ public class DAOtwitter {
 		
 	}
 	
+	public ArrayList<Post> VisualizzaMieiPost(int id){
+		ArrayList<Post> mieiP = new ArrayList();
+		
+		String query = "select * from post where id_utente=?";
+		
+		try (Connection connessione = con.getConnection();
+				PreparedStatement statement = connessione.prepareStatement(query);) {
+			
+			statement.setInt(1, id);
+			ResultSet resultSet = statement.executeQuery();
+			
+			while( resultSet.next() ) {
+				Post p= new Post();
+				p.setId( resultSet.getInt( "id" ) );
+				p.setDescrizione( resultSet.getString( "descrizione" ) );
+				p.setId_utente( resultSet.getInt( "id_utente" ) );
+				mieiP.add(p);
+			}
+			
+			resultSet.close();
+			statement.close();
+			
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+	
+		}
+		
+			return mieiP;
+		
+	}
+	
+	public Utenti RicercaUtente(String em) {
+		
+		Utenti utente= new Utenti();
+		String query = "SELECT * FROM utenti where email = ?";
+		try (Connection connessione = con.getConnection();
+				PreparedStatement statement = connessione.prepareStatement(query);) {
+			
+				statement.setString(1, em);
+				ResultSet resultSet = statement.executeQuery();
+				
+				if( resultSet.next() ) {
+					
+					utente.setId(resultSet.getInt("id"));
+					utente.setNome( resultSet.getString( "Nome" ) );
+					utente.setCognome( resultSet.getString( "Cognome" ) );
+					utente.setEmail( resultSet.getString( "Email" ) );
+					utente.setPassword( resultSet.getString( "Password" ) );
+				}
+				resultSet.close();
+				statement.close();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+		}	
+		return utente;
+	
+		
+		
+		
+	}
+	
 
 }
